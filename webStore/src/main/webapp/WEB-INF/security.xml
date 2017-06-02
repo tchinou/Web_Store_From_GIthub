@@ -1,0 +1,55 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	
+	<security:http auto-config="true" use-expressions="true">
+		<security:form-login login-page="/login" default-target-url="/home"   login-processing-url="/doLogin"/>
+		<security:csrf disabled="true"/>
+		<security:intercept-url pattern="/login" access="permitAll"/>
+		<security:intercept-url pattern="/maps" access="permitAll"/>
+		<security:intercept-url pattern="/faq" access="permitAll"/>
+		<security:intercept-url pattern="/contact" access="permitAll"/>
+		<security:intercept-url pattern="/rss" access="permitAll"/>
+		<security:intercept-url pattern="/register" access="permitAll"/>
+		<security:intercept-url pattern="/product_details" access="permitAll"/>
+		<security:intercept-url pattern="/home" access="permitAll"/>
+		<security:intercept-url pattern="/cart" access="permitAll"/>
+		<security:intercept-url pattern="/deleteProductFromCart" access="permitAll"/>
+		<security:intercept-url pattern="/addToCart" access="permitAll"/>
+		<security:intercept-url pattern="/doRegister" access="permitAll"/>
+		<security:intercept-url pattern="/performProductSearch" access="permitAll"/>
+		<security:intercept-url pattern="/resources/**" access="permitAll"/>
+		<security:intercept-url pattern="/order_table" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/order_view" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/product_create" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/product_delete" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/acount_delete" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/account" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<security:intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<security:intercept-url pattern="/processOrder" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+		<security:logout logout-success-url="/login?logout=true" logout-url="/logout"
+			invalidate-session="true"
+			delete-cookies="JSESSIONID"/>
+		<security:session-management
+			invalid-session-url="/login">
+		</security:session-management>
+	</security:http>
+
+	<bean id="userDetailsService" class="com.softuni.webstore.security.UserDetailsServiceImpl" />
+
+	<security:authentication-manager>
+		<security:authentication-provider
+			user-service-ref="userDetailsService">
+			<security:password-encoder hash="md5" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+	<security:global-method-security secured-annotations="enabled" />
+
+</beans>
